@@ -1,24 +1,27 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact, getContacts, getFilteredContacts } from 'redux/slice';
+import { getContacts, getFilteredContacts } from 'redux/slice';
 
 // import PropTypes from 'prop-types';
 
 import css from './ContactList.module.css';
 
 export function ContactList() {
-  const contacts = useSelector(getContacts);
+  const { items, isLoading, error } = useSelector(getContacts);
+
   const filteredContacts = useSelector(getFilteredContacts);
 
   const dispatch = useDispatch();
 
   const getVisibleContacts = () =>
-    contacts.filter(contact =>
+    items.filter(contact =>
       contact.name.toLowerCase().includes(filteredContacts.toLowerCase())
     );
 
   return (
     <>
-      {contacts.length < 1 ? (
+      {isLoading && <p>Loading tasks...</p>}
+      {error && <p>{error}</p>}
+      {items.length < 1 ? (
         <p>Add your first contact</p>
       ) : (
         <ul className={css.list}>
@@ -30,7 +33,7 @@ export function ContactList() {
                 <button
                   className={css.list__button}
                   type="button"
-                  onClick={() => dispatch(deleteContact(id))}
+                  // onClick={() => dispatch(deleteContact(id))}
                 >
                   Delete
                 </button>

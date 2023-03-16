@@ -4,7 +4,20 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList';
 import { Filter } from './Filter';
 
-export function App() {
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { fetchPhoneBook } from 'redux/phoneBook/phoneBookOperations';
+import { getContacts } from 'redux/slice';
+
+export const App = () => {
+  const dispatch = useDispatch();
+  const { items, isLoading, error } = useSelector(getContacts);
+
+  useEffect(() => {
+    dispatch(fetchPhoneBook());
+  }, [dispatch]);
+
   return (
     <div
       style={{
@@ -18,9 +31,13 @@ export function App() {
         color: '#010101',
       }}
     >
-      <ContactForm />
+      {isLoading && <p>Loading tasks...</p>}
+      {error && <p>{error}</p>}
+      <p>{items.length > 0 && JSON.stringify(items, null, 2)}</p>
+
+      {/* <ContactForm />
       <Filter />
-      <ContactList />
+      <ContactList /> */}
     </div>
   );
-}
+};
