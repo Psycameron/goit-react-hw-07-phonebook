@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContacts } from 'services/api';
-import { fetchPhoneBook } from './phoneBook/phoneBookOperations';
+// import { fetchContacts } from 'services/api';
+import { fetchPhoneBook } from './operations';
 
 const initialState = {
   contacts: {
@@ -14,6 +14,12 @@ const initialState = {
 export const phoneBookSlice = createSlice({
   name: 'contacts',
   initialState,
+
+  reducers: {
+    onFilter(state, action) {
+      state.filter = action.payload;
+    },
+  },
 
   extraReducers: {
     [fetchPhoneBook.pending](state) {
@@ -48,11 +54,6 @@ export const phoneBookSlice = createSlice({
   // },
 });
 
-export const { fetchingInProgress, fetchingSuccess, fetchingError } =
+export const { onFilter, fetchingInProgress, fetchingSuccess, fetchingError } =
   phoneBookSlice.actions;
 export const phoneBookReducer = phoneBookSlice.reducer;
-
-// Selectors
-
-export const getContacts = state => state.phoneBook.contacts;
-export const getFilteredContacts = state => state.phoneBook.filter;
