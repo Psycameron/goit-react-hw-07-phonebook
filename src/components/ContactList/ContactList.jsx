@@ -36,7 +36,7 @@ export const ContactList = () => {
       {isLoading && <p>Loading tasks...</p>}
       {error && <p>{error}</p>}
       {items.length < 1 ? (
-        <p>Add your first contact</p>
+        <p></p>
       ) : (
         <ul className={css.list}>
           {getVisibleContacts().map(({ id, name, phone }) => {
