@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { fetchContacts } from 'services/api';
-import { fetchPhoneBook } from './operations';
+import { addContact, deleteContact, fetchPhoneBook } from './operations';
 
 const initialState = {
   contacts: {
@@ -11,8 +10,16 @@ const initialState = {
   filter: '',
 };
 
+const handlePending = state => {
+  state.contacts.isLoading = true;
+};
+const handleRejected = (state, action) => {
+  state.contacts.isLoading = false;
+  state.contacts.error = action.payload;
+};
+
 export const phoneBookSlice = createSlice({
-  name: 'contacts',
+  name: 'phoneBook',
   initialState,
 
   reducers: {
@@ -22,36 +29,37 @@ export const phoneBookSlice = createSlice({
   },
 
   extraReducers: {
-    [fetchPhoneBook.pending](state) {
-      state.contacts.isLoading = true;
-    },
+    // get all contacts
+    [fetchPhoneBook.pending]: handlePending,
     [fetchPhoneBook.fulfilled](state, action) {
       state.contacts.isLoading = false;
       state.contacts.error = null;
       state.contacts.items = action.payload;
     },
-    [fetchPhoneBook.rejected](state, action) {
+    [fetchPhoneBook.rejected]: handleRejected,
+
+    // add contact
+    [addContact.pending]: handlePending,
+    [addContact.fulfilled]: (state, action) => {
       state.contacts.isLoading = false;
-      state.contacts.error = action.payload;
+      state.contacts.error = null;
+      state.contacts.items.push(action.payload);
     },
+    [addContact.rejected]: handleRejected,
+
+    // delete contact
+    [deleteContact.pending]: handlePending,
+    [deleteContact.fulfilled](state, action) {
+      state.contacts.isLoading = false;
+      state.contacts.error = null;
+
+      const index = state.contacts.items.findIndex(
+        contact => contact.id === action.payload
+      );
+      state.contacts.items.splice(index, 1);
+    },
+    [deleteContact.rejected]: handleRejected,
   },
-
-  // reducers: {
-  //   addContact: (state, action) => {
-  //     state.contacts.push(action.payload);
-  //   },
-
-  //   deleteContact: (state, action) => {
-  //     const index = state.contacts.findIndex(
-  //       contact => contact.id === action.payload
-  //     );
-  //     state.contacts.splice(index, 1);
-  //   },
-
-  //   onFilter(state, action) {
-  //     state.filter = action.payload;
-  //   },
-  // },
 });
 
 export const { onFilter, fetchingInProgress, fetchingSuccess, fetchingError } =

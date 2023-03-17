@@ -1,29 +1,29 @@
 .list {
 }
 
-.list__item {
+.listItem {
   display: flex;
   align-items: center;
   width: 460px;
 }
 
-.list__item:not(:last-child) {
+.listItem:not(:last-child) {
   margin-bottom: 20px;
 }
 
-.list__name {
+.listName {
   margin-right: 15px;
 
-  font-size: 30px;
+  font-size: 20px;
   line-height: 1.2;
 }
 
-.list__number {
-  font-size: 30px;
+.listNumber {
+  font-size: 20px;
   line-height: 1.2;
 }
 
-.list__button {
+.listButton {
   height: 20px;
   padding: 1px 10px;
   margin-left: auto;

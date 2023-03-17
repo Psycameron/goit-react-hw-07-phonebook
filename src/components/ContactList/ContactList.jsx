@@ -1,20 +1,34 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, getFilteredContacts } from 'redux/selectors';
+import {
+  getContacts,
+  getError,
+  getFilteredContacts,
+  getIsLoading,
+} from 'redux/selectors';
+
+import { deleteContact, fetchPhoneBook } from 'redux/operations';
+import { useEffect } from 'react';
 
 // import PropTypes from 'prop-types';
 
 import css from './ContactList.module.css';
 
-export function ContactList() {
-  const { items, isLoading, error } = useSelector(getContacts);
-
-  const filteredContacts = useSelector(getFilteredContacts);
+export const ContactList = () => {
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+  const { items } = useSelector(getContacts);
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchPhoneBook());
+  }, [dispatch]);
+
+  const filteredContacts = useSelector(getFilteredContacts);
+
   const getVisibleContacts = () =>
     items.filter(contact =>
-      contact.name.toLowerCase().includes(filteredContacts.toLowerCase())
+      contact.name.toLowerCase().includes(filteredContacts.toLowerCase().trim())
     );
 
   return (
@@ -25,15 +39,15 @@ export function ContactList() {
         <p>Add your first contact</p>
       ) : (
         <ul className={css.list}>
-          {getVisibleContacts().map(({ id, name, number }) => {
+          {getVisibleContacts().map(({ id, name, phone }) => {
             return (
-              <li className={css.list__item} key={id}>
-                <span className={css.list__name}>{name}:</span>
-                <span className={css.list__number}>{number}</span>
+              <li className={css.listItem} key={id}>
+                <span className={css.listName}>{name}:</span>
+                <span className={css.listNumber}>{phone}</span>
                 <button
-                  className={css.list__button}
+                  className={css.listButton}
                   type="button"
-                  // onClick={() => dispatch(deleteContact(id))}
+                  onClick={() => dispatch(deleteContact(id))}
                 >
                   Delete
                 </button>
@@ -44,7 +58,7 @@ export function ContactList() {
       )}
     </>
   );
-}
+};
 
 // ContactList.propTypes = {
 //   contacts: PropTypes.arrayOf(

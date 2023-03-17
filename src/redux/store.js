@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import phoneBookReducer from './phoneBook/phoneBookReducer';
 
 import { phoneBookReducer } from './slice';
 

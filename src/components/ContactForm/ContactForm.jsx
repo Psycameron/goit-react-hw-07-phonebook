@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getContacts } from 'redux/selectors';
-
-import { nanoid } from 'nanoid';
+import { addContact } from 'redux/operations';
 
 import css from './ContactForm.module.css';
 
 export function ContactForm() {
-  const contacts = useSelector(getContacts);
+  const { items } = useSelector(getContacts);
+  // console.log(`🚀 ~ ContactForm ~ contacts:`, items);
   const dispatch = useDispatch();
 
   const [name, setName] = useState('');
@@ -34,18 +34,17 @@ export function ContactForm() {
     e.preventDefault();
 
     const contact = {
-      id: nanoid(),
       name,
-      number,
+      phone: number,
     };
 
-    const contactNamesList = contacts.map(contact => contact.name);
+    const contactNamesList = items.map(contact => contact.name);
 
     if (contactNamesList.includes(name)) {
       return alert(`${name} is already contacts`);
     }
 
-    // dispatch(addContact(contact));
+    dispatch(addContact(contact));
     reset();
   };
 
